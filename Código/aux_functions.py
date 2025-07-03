@@ -1,6 +1,6 @@
 import os
 import shutil
-from filters import type1, type2, type3, type4, type5
+from filters import type1, type2, type3, type4, type5, type6 #Nuevo type 6
 import webbrowser
 import urllib.parse
 
@@ -39,6 +39,10 @@ def generate_excel(executives, send_separately, alert_type, df_snapshot, df_proj
         
     elif alert_type == "Tipo 5":
         files = type5(df_snapshot, send_separately, executives, EXCEL_FOLDER, prefix, files)
+
+    #Nuevo excel para informes técnicos pendientes de revisión ejecutiva
+    elif alert_type == "Tipo 6":
+        files = type6(df_snapshot, send_separately, executives, EXCEL_FOLDER, prefix, files)  
 
     return files        
 

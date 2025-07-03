@@ -10,7 +10,7 @@ def generate_files(send_separately, executives, df_base_filtering, EXCEL_FOLDER,
     if send_separately:
         for executive in executives:
             print(f"Generando archivo para: {executive}")
-            if type == "T3" or type == "T4":
+            if type == "T3" or type == "T4" or type == "T6": #agregamos el nuevo tipo T6
                 df_executive = df_base_filtering[df_base_filtering['Ejecutivo Técnico Proyecto'] == executive]
             else:
                 df_executive = df_base_filtering[df_base_filtering['Nombre Ejecutivo Técnico'] == executive]
@@ -23,7 +23,7 @@ def generate_files(send_separately, executives, df_base_filtering, EXCEL_FOLDER,
                 print(f"No hay datos para el ejecutivo: {executive}")
     else:
         print("Generando archivo consolidado para todos los ejecutivos seleccionados.")
-        if type == "T3" or type == "T4":
+        if type == "T3" or type == "T4" or type == "T6":  #agregamos el nuevo tipo T6
             df_consolidated = df_base_filtering[df_base_filtering['Ejecutivo Técnico Proyecto'].isin(executives)]
         else:
             df_consolidated = df_base_filtering[df_base_filtering['Nombre Ejecutivo Técnico'].isin(executives)]
@@ -73,10 +73,12 @@ def save_format_excel(df, filename, wanted_columns, type):
             elif type == "T4":
                 if cell.column in [wanted_columns.index('Fecha Entrega Programada') + 1]:
                     cell.style = date_style         
+            elif type == "T6":  # Nuevo tipo T6 agregado
+                if cell.column in [wanted_columns.index('Fecha Entrega Programada') + 1, wanted_columns.index('Fecha Entrega Real') + 1]:
+                    cell.style = date_style
             else:
                 if cell.column in [wanted_columns.index('Fecha Resolucion')+ 1]:
                     cell.style = date_style
-
 
     date_columns = Table(displayName="date_columnsReporte", ref=f"A1:{get_column_letter(len(wanted_columns))}{len(df_to_save) + 1}")
     table_style = TableStyleInfo(name="TableStyleMedium9", showRowStripes=True)

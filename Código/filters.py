@@ -9,10 +9,11 @@ def type1(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
     if df.empty:
         print("El DataFrame está vacío. No se pueden generar archivos.")
         return files
-
+    
     df = date_columns(df, ['Anticipo', 'Fiel cumplimiento'])
-
-    wanted_columns = ['Código', 'Nombre Ejecutivo Técnico', 'Estado Proyecto', 'Anticipo', 'Fiel cumplimiento']
+    
+    # Nuevas columnas para filtrar 'Nombre de la empresa', 'Titulo del proyecto'
+    wanted_columns = ['Código', 'Nombre Ejecutivo Técnico', 'Nombre de la empresa', 'Titulo del proyecto', 'Estado Proyecto', 'Anticipo', 'Fiel cumplimiento']
     deadline = pd.Timestamp(date.today() + timedelta(weeks=12))
     current_date = pd.Timestamp(date.today())
 
@@ -40,7 +41,8 @@ def type2(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
         print("El DataFrame está vacío. No se pueden generar archivos.")
         return files
 
-    wanted_columns = ['Código', 'Nombre Ejecutivo Técnico',  'Fecha Resolucion', 'Rut Beneficiario', 'Estado de informe final', 'Anticipo','Fiel cumplimiento']
+    # Nuevas columnas para filtrar 'Nombre de la empresa', 'Titulo del proyecto'
+    wanted_columns = ['Código', 'Nombre Ejecutivo Técnico', 'Nombre de la empresa', 'Titulo del proyecto', 'Fecha Resolucion', 'Rut Beneficiario', 'Estado de informe final', 'Anticipo','Fiel cumplimiento']
 
     df_base_filtering = df[
         (df['Anticipo'] == "No se encuentra anticipo") & 
@@ -65,7 +67,8 @@ def type3(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
         print("El DataFrame está vacío. No se pueden generar archivos.")
         return files
 
-    wanted_columns = ['Código de Proyecto', 'Ejecutivo Técnico Proyecto', 'Tipo de Informe', 'Fecha Entrega Programada', 'Fecha Entrega Real', 'Estado Proyecto']
+    # Nuevas columnas para filtrar 'Nombre de la empresa', 'Titulo del proyecto'
+    wanted_columns = ['Código de Proyecto', 'Ejecutivo Técnico Proyecto','Nombre de la empresa', 'Titulo del proyecto', 'Tipo de Informe', 'Fecha Entrega Programada', 'Fecha Entrega Real', 'Estado Proyecto']
     
     
     df = date_columns(df, ['Fecha Entrega Real', 'Fecha Entrega Programada'])
@@ -95,7 +98,8 @@ def type4(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
         print("El DataFrame está vacío. No se pueden generar archivos.")
         return files
 
-    wanted_columns = ['Código de Proyecto', 'Ejecutivo Técnico Proyecto', 'Fecha Entrega Programada', 'Estado Proyecto']
+    # Nuevas columnas para filtrar 'Nombre de la empresa', 'Titulo del proyecto'
+    wanted_columns = ['Código de Proyecto', 'Ejecutivo Técnico Proyecto','Nombre de la empresa', 'Titulo del proyecto', 'Fecha Entrega Programada', 'Estado Proyecto']
     deadline = pd.Timestamp(date.today() + timedelta(weeks=12))
 
     df_base_filtering = df[
@@ -123,7 +127,8 @@ def type5(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
         print("El DataFrame está vacío. No se pueden generar archivos.")
         return files
 
-    wanted_columns = ['Código', 'Nombre Ejecutivo Técnico', 'Estado Proyecto', 'Fecha Resolucion', 'Rut Beneficiario', 'Estado de informe final']
+    # Nuevas columnas para filtrar 'Nombre de la empresa', 'Titulo del proyecto'
+    wanted_columns = ['Código', 'Nombre Ejecutivo Técnico', 'Nombre de la empresa', 'Titulo del proyecto', 'Estado Proyecto', 'Fecha Resolucion', 'Rut Beneficiario', 'Estado de informe final']
 
     df_base_filtering = df[df['Estado Proyecto'] != "VIGENTE"].copy()
 
@@ -139,3 +144,34 @@ def type5(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
     df = reset_filters(df)
     return files
 
+# Nueva función Tipo 6
+def type6(df, send_separately, executives, EXCEL_FOLDER, prefix, files):
+    df = reset_filters(df)
+    if df.empty:
+        print("El DataFrame está vacío. No se pueden generar archivos.")
+        return files
+
+    # Nuevas columnas para filtrar 'Nombre de la empresa', 'Titulo del proyecto'
+    wanted_columns = ['Código de Proyecto', 'Ejecutivo Técnico Proyecto', 'Nombre de la empresa', 'Titulo del proyecto', 'Tipo de Informe', 'Fecha Entrega Programada', 'Fecha Entrega Real', 'Estado Proyecto']
+    
+    
+    df = date_columns(df, ['Fecha Entrega Real', 'Fecha Entrega Programada'])
+
+    df_base_filtering = df[
+        (df['Fecha Entrega Real'].notna()) &
+        (df['Estado Proyecto'] == "VIGENTE") &
+        (df['Fecha cierre técnico'].isna()) &
+        (df['Estado de revisión financiera'] == "VIGENTE") & #No se si es aprobado o vigente
+        (df['Estado de revisión técnica'] == "PENDIENTE")
+    ].copy()
+
+    df_base_filtering = df_base_filtering.sort_values(by='Fecha Entrega Programada', ascending=True)
+
+    if df_base_filtering.empty:
+        print("No hay datos que cumplan con las condiciones para generar archivos.")
+        return files
+
+    generate_files(send_separately, executives, df_base_filtering, EXCEL_FOLDER, prefix, files, wanted_columns, type="T3")    
+    
+    df = reset_filters(df)
+    return files

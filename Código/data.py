@@ -24,7 +24,13 @@ messages_types = {
         "subject": "Proyectos con estado PENDIENTE",
         "separate_message": "Estimad@ {executive_name},\n\nSe reportan los proyectos que cuentan con estado pendiente de configuración.\n\nSaludos cordiales,",
         "group_message": "Estimado equipo:\n\nSe reportan los proyectos que cuentan con estado pendiente de configuración.\n\nSaludos cordiales,"
-    }    
+    },
+    #Nuevo filtro para informes técnicos pendientes de revisión ejecutiva
+    "Tipo 6": {
+        "subject": "Informes Técnicos Pendientes de Revisión Ejecutiva",
+        "separate_message": "Estimad@ {executive_name},\n\nSe reportan los informes técnicos que han sido revisados por el área financiera pero que aún están pendientes de revisión por parte del ejecutivo técnico.\nEs importante señalar que este registro no contempla situaciones específicas de cada proyecto, tales como solicitudes de prórroga, observaciones previas u otras particularidades.\n\nSaludos cordiales,",
+        "group_message": "Estimado equipo:\n\nSe reportan los informes técnicos que han sido revisados por el área financiera pero que aún están pendientes de revisión por parte del ejecutivo técnico.\nEs importante señalar que este registro no contempla situaciones específicas de cada proyecto, tales como solicitudes de prórroga, observaciones previas u otras particularidades.\n\nSaludos cordiales,"
+    }
     
 }
 
@@ -43,7 +49,12 @@ file_types = {
     },
     "Tipo 5": {
         "prefix": "Proyectos_Estado_Pendiente",
+    },
+    #Nuevo filtro para informes técnicos pendientes de revisión ejecutiva
+    "Tipo 6": {
+        "prefix": "Informes_Pendientes_Revisión_Ejecutiva",
     }    
 }
+
 
 
